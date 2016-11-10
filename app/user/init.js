@@ -5,6 +5,25 @@ function initUser (app) {
   storage.initSync();
   app.get('/', renderWelcome)
   app.get('/profile', renderProfile)
+  app.post('/sso', (req, res) => {  
+    rp({
+      method: 'GET',
+      uri: 'http://54.153.108.164/api/v1/tokens',
+      headers: {
+        'User-Agent': 'Request-Promise',
+        'Authorization': 'Bearer ' + req.body.id_token
+      },
+      json: true
+      })
+      .then((data) => {
+        authenticate(req, res)
+      })
+      .catch((err) => {
+        console.log(err)
+        renderWelcome(req, res)
+      })
+  })
+
   app.post('/login', (req, res) => {  
     rp({
       method: 'POST',
@@ -24,6 +43,11 @@ function initUser (app) {
         renderWelcome(req, res)
       })
   })
+}
+
+function authenticate (req, res) {
+  console.log(req)
+  res.render('user/profile')
 }
 
 function renderWelcome (req, res) {
