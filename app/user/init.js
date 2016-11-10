@@ -1,6 +1,8 @@
 const rp = require('request-promise')
 const storage = require('node-persist')
 
+const config = require('../../config/auth_server');
+
 function initUser (app) {
   storage.initSync();
   app.get('/', renderWelcome)
@@ -8,7 +10,7 @@ function initUser (app) {
   app.post('/sso', (req, res) => {  
     rp({
       method: 'GET',
-      uri: 'http://54.153.108.164/api/v1/tokens',
+      uri: config.ith_auth_server_login_url,
       headers: {
         'User-Agent': 'Request-Promise',
         'Authorization': 'Bearer ' + req.body.id_token
@@ -27,7 +29,7 @@ function initUser (app) {
   app.post('/login', (req, res) => {  
     rp({
       method: 'POST',
-      uri: 'http://54.153.108.164/api/v1/tokens',
+      uri: config.ith_auth_server_login_url,
       body: {
         email: req.body.email,
         password: req.body.password
