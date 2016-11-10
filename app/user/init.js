@@ -47,7 +47,9 @@ function initUser (app) {
 
 function authenticate (req, res) {
   console.log(req)
-  res.render('user/profile')
+  res.render('user/profile', {
+    email: req.body.id_token
+  })
 }
 
 function renderWelcome (req, res) {
